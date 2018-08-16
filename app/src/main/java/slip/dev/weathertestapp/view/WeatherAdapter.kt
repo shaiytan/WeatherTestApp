@@ -1,10 +1,13 @@
 package slip.dev.weathertestapp.view
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import slip.dev.weathertestapp.R
 import slip.dev.weathertestapp.model.WeatherRecord
@@ -30,6 +33,7 @@ class WeatherAdapter(
         holder.datetime.text = String.format("%1\$td.%1\$tm\n%1\$tH:%1\$tM", calendar)
         holder.temperature.text = "${weather.tempMax}/${weather.tempMin} C"
         holder.weatherGroup.text = weather.weatherGroup
+        holder.weatherIcon.drawable.setColorFilter(Color.BLACK, PorterDuff.Mode.MULTIPLY)
     }
 
     fun updateWeather(data: List<WeatherRecord>) {
@@ -41,5 +45,6 @@ class WeatherAdapter(
         val temperature: TextView = item.findViewById(R.id.temperature)
         val datetime: TextView = item.findViewById(R.id.datetime)
         val weatherGroup: TextView = item.findViewById(R.id.weather_group)
+        val weatherIcon: ImageView = item.findViewById(R.id.ic_weather)
     }
 }

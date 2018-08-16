@@ -26,11 +26,10 @@
         app:layout_constraintStart_toEndOf="@+id/datetime"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.AppCompatImageView
+    <ImageView
         android:id="@+id/ic_weather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
         android:src="@drawable/ic_white_day_cloudy"
         app:layout_constraintBottom_toTopOf="@+id/weather_group"
         app:layout_constraintEnd_toEndOf="parent"
