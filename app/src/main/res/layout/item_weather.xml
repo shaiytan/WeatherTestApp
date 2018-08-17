@@ -8,8 +8,9 @@
         android:id="@+id/datetime"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:text="21.12 21:20"
-        android:textSize="12sp"
+        android:layout_margin="@dimen/margin"
+        android:text="пт"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,7 +21,8 @@
         android:layout_height="0dp"
         android:text="+42 C"
         android:textAlignment="center"
-        android:textSize="16sp"
+        android:layout_margin="@dimen/margin"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ic_weather"
         app:layout_constraintStart_toEndOf="@+id/datetime"
@@ -31,16 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_white_day_cloudy"
-        app:layout_constraintBottom_toTopOf="@+id/weather_group"
+        android:layout_margin="@dimen/margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/weather_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Clouds"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>

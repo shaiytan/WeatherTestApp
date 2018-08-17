@@ -58,7 +58,7 @@ class ForecastResponse(val forecast: List<WeatherRecord>) {
                     windDegree,
                     latitude,
                     longitude,
-                    datetime
+                    datetime * 1000
             )
         }
     }
