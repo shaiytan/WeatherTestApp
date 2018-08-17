@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryDark"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/date_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ПТ, 17 августа"
+        android:textColor="@color/colorBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ic_weather"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_white_day_cloudy"
+        app:layout_constraintEnd_toStartOf="@+id/temperature"
+        app:layout_constraintHorizontal_weight="4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_view" />
+
+    <ImageView
+        android:id="@+id/ic_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="32dp"
+        android:src="@drawable/ic_temp"
+        app:layout_constraintBottom_toBottomOf="@+id/temperature"
+        app:layout_constraintStart_toEndOf="@+id/ic_weather"
+        app:layout_constraintTop_toTopOf="@+id/temperature" />
+
+    <TextView
+        android:id="@+id/temperature"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin"
+        android:text="+42/+13 C"
+        android:textAlignment="center"
+        android:textColor="@color/colorBackground"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/humidity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="5"
+        app:layout_constraintStart_toEndOf="@+id/ic_weather"
+        app:layout_constraintTop_toBottomOf="@+id/date_view"
+        app:layout_constraintVertical_weight="1" />
+
+    <ImageView
+        android:id="@+id/ic_humid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="32dp"
+        android:src="@drawable/ic_humidity"
+        app:layout_constraintBottom_toBottomOf="@+id/humidity"
+        app:layout_constraintStart_toEndOf="@+id/ic_weather"
+        app:layout_constraintTop_toTopOf="@+id/humidity" />
+
+    <TextView
+        android:id="@+id/humidity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin"
+        android:text="42%"
+        android:textAlignment="center"
+        android:textColor="@color/colorBackground"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/wind"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="5"
+        app:layout_constraintStart_toEndOf="@+id/ic_weather"
+        app:layout_constraintTop_toBottomOf="@+id/temperature"
+        app:layout_constraintVertical_weight="1" />
+
+    <ImageView
+        android:id="@+id/ic_wind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="32dp"
+        android:src="@drawable/ic_wind"
+        app:layout_constraintBottom_toBottomOf="@+id/wind"
+        app:layout_constraintStart_toEndOf="@+id/ic_weather"
+        app:layout_constraintTop_toTopOf="@+id/wind" />
+
+    <TextView
+        android:id="@+id/wind"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin"
+        android:text="13 м/с"
+        android:textAlignment="center"
+        android:textColor="@color/colorBackground"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="5"
+        app:layout_constraintStart_toEndOf="@+id/ic_weather"
+        app:layout_constraintTop_toBottomOf="@+id/humidity"
+        app:layout_constraintVertical_weight="1" />
+
+    <ImageView
+        android:id="@+id/ic_wind_direction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="32dp"
+        android:src="@drawable/ic_icon_wind_ne"
+        app:layout_constraintBottom_toBottomOf="@+id/wind"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/wind" />
+</android.support.constraint.ConstraintLayout>

@@ -14,6 +14,7 @@ class ForecastViewModel : ViewModel() {
 
     val dailyForecast: LiveData<List<WeatherRecord>>
     val hourlyForecast: MutableLiveData<List<WeatherRecord>>
+    val currentWeather: MutableLiveData<WeatherRecord>
 
     init {
         dailyForecast = Transformations.map(weatherData) { forecast ->
@@ -29,10 +30,10 @@ class ForecastViewModel : ViewModel() {
                         .toList()
                         .sortedByDescending { it.second }[0]
                         .first
-                val tempMin = oneDayForecast.minBy(WeatherRecord::tempMin)?.tempMin ?: 0.0
-                val tempMax = oneDayForecast.maxBy(WeatherRecord::tempMax)?.tempMax ?: 0.0
+                val tempMin = oneDayForecast.minBy(WeatherRecord::tempMin)?.tempMin ?: 0
+                val tempMax = oneDayForecast.maxBy(WeatherRecord::tempMax)?.tempMax ?: 0
                 val humidity = oneDayForecast.sumBy(WeatherRecord::humidity) / oneDayForecast.size
-                val windSpeed = oneDayForecast.sumByDouble(WeatherRecord::windSpeed) / oneDayForecast.size
+                val windSpeed = oneDayForecast.sumBy(WeatherRecord::windSpeed) / oneDayForecast.size
                 val windDegree = oneDayForecast
                         .groupBy(WeatherRecord::windDegree)
                         .mapValues { it.value.size }
@@ -55,6 +56,7 @@ class ForecastViewModel : ViewModel() {
         }
         hourlyForecast = MutableLiveData()
         hourlyForecast.value = hourlyForecast(System.currentTimeMillis())
+        currentWeather = MutableLiveData()
     }
 
     private fun hourlyForecast(date: Long): List<WeatherRecord> {
@@ -73,5 +75,6 @@ class ForecastViewModel : ViewModel() {
     fun loadForecast() = repository.loadForecast()
     fun updateHourlyForecast(dailyForecast: WeatherRecord) {
         hourlyForecast.value = hourlyForecast(dailyForecast.datetime)
+        currentWeather.value = dailyForecast
     }
 }

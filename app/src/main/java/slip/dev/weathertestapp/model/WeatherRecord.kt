@@ -8,11 +8,11 @@ import java.lang.reflect.Type
 
 data class WeatherRecord(
         val weatherGroup: String,
-        val tempMin: Double,
-        val tempMax: Double,
+        val tempMin: Int,
+        val tempMax: Int,
         val humidity: Int,
-        val windSpeed: Double,
-        val windDegree: Double,
+        val windSpeed: Int,
+        val windDegree: Int,
         val latitude: Double,
         val longitude: Double,
         val datetime: Long,
@@ -29,10 +29,8 @@ class ForecastResponse(val forecast: List<WeatherRecord>) {
             val latitude: Double = coord?.get("lat")?.asDouble ?: 0.0
             val weatherItems = root["list"]?.asJsonArray
             weatherItems?.let {
-                val parsedItems = it.mapNotNull { it?.asJsonObject }
-                        .map { element ->
-                            parseWeatherRecord(element, longitude, latitude)
-                        }
+                val parsedItems = it.mapNotNull { element -> element?.asJsonObject }
+                        .map { element -> parseWeatherRecord(element, longitude, latitude) }
                 forecast.addAll(parsedItems)
             }
             return ForecastResponse(forecast)
@@ -41,14 +39,14 @@ class ForecastResponse(val forecast: List<WeatherRecord>) {
         private fun parseWeatherRecord(root: JsonObject, longitude: Double, latitude: Double): WeatherRecord {
             val datetime = root["dt"]?.asLong ?: 0L
             val main = root["main"]?.asJsonObject
-            val tempMin = main?.get("temp_min")?.asDouble ?: 0.0
-            val tempMax = main?.get("temp_max")?.asDouble ?: 0.0
+            val tempMin = main?.get("temp_min")?.asInt ?: 0
+            val tempMax = main?.get("temp_max")?.asInt ?: 0
             val humidity = main?.get("humidity")?.asInt ?: 0
             val weather = root["weather"]?.asJsonArray?.get(0)?.asJsonObject
             val weatherGroup = weather?.get("main")?.asString ?: "Other"
             val wind = root["wind"]?.asJsonObject
-            val windSpeed = wind?.get("speed")?.asDouble ?: 0.0
-            val windDegree = wind?.get("deg")?.asDouble ?: 0.0
+            val windSpeed = wind?.get("speed")?.asInt ?: 0
+            val windDegree = wind?.get("deg")?.asInt ?: 0
             return WeatherRecord(
                     weatherGroup,
                     tempMin,

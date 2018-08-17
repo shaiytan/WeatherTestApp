@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import slip.dev.weathertestapp.R
 import slip.dev.weathertestapp.model.WeatherRecord
+import slip.dev.weathertestapp.view.weatherGroupIcon
 import java.util.*
 
 private val nightIcons = mapOf(
@@ -41,7 +42,7 @@ class HourlyWeatherAdapter(
         holder.datetime.text = Html.fromHtml("$hour<sup>00</sup>")
         holder.temperature.text = "${weather.tempMax}\u00B0"
         var icon = weatherGroupIcon(weather.weatherGroup)
-        if (hour < 4 || hour > 20) {
+        if (hour !in 4..20) {
             icon = nightIcons[icon]!!
         }
         holder.weatherIcon.setImageResource(icon)

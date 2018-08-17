@@ -6,11 +6,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.MainActivity">
 
+    <include
+        android:id="@+id/selected_weather"
+        layout="@layout/item_weather_selected" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/hourly_weather_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/selected_weather" />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/daily_weather_list"
         android:layout_width="match_parent"

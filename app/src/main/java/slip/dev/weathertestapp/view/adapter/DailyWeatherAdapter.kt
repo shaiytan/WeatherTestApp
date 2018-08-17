@@ -10,15 +10,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import slip.dev.weathertestapp.R
 import slip.dev.weathertestapp.model.WeatherRecord
+import slip.dev.weathertestapp.view.weatherGroupIcon
 import java.util.*
-
-fun weatherGroupIcon(weatherGroup: String) = when (weatherGroup) {
-    "Clear" -> R.drawable.ic_white_day_bright
-    "Rain" -> R.drawable.ic_white_day_rain
-    "Drizzle" -> R.drawable.ic_white_day_shower
-    "Thunderstorm" -> R.drawable.ic_white_day_thunder
-    else -> R.drawable.ic_white_day_cloudy
-}
 
 class DailyWeatherAdapter(
         private val context: Context,
