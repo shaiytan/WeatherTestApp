@@ -1,4 +1,4 @@
-package slip.dev.weathertestapp.view
+package slip.dev.weathertestapp.view.adapter
 
 import android.content.Context
 import android.graphics.PorterDuff
@@ -12,25 +12,25 @@ import slip.dev.weathertestapp.R
 import slip.dev.weathertestapp.model.WeatherRecord
 import java.util.*
 
-class WeatherAdapter(
+fun weatherGroupIcon(weatherGroup: String) = when (weatherGroup) {
+    "Clear" -> R.drawable.ic_white_day_bright
+    "Rain" -> R.drawable.ic_white_day_rain
+    "Drizzle" -> R.drawable.ic_white_day_shower
+    "Thunderstorm" -> R.drawable.ic_white_day_thunder
+    else -> R.drawable.ic_white_day_cloudy
+}
+
+class DailyWeatherAdapter(
         private val context: Context,
         private var data: List<WeatherRecord>
-) : RecyclerView.Adapter<WeatherAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<DailyWeatherAdapter.ViewHolder>() {
 
     private var selectedPosition = 0
     var onClickListener: View.OnClickListener? = null
 
-    private fun weatherGroupIcon(weatherGroup: String) = when (weatherGroup) {
-        "Clear" -> R.drawable.ic_white_day_bright
-        "Rain" -> R.drawable.ic_white_day_rain
-        "Drizzle" -> R.drawable.ic_white_day_shower
-        "Thunderstorm" -> R.drawable.ic_white_day_thunder
-        else -> R.drawable.ic_white_day_cloudy
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context)
-                .inflate(R.layout.item_weather, parent, false)
+                .inflate(R.layout.item_weather_daily, parent, false)
         view.setOnClickListener { onClickListener?.onClick(it) }
         return ViewHolder(view)
     }
@@ -42,7 +42,6 @@ class WeatherAdapter(
         val calendar = Calendar.getInstance()
         calendar.timeZone = TimeZone.getDefault()
         calendar.timeInMillis = weather.datetime
-//        holder.datetime.text = String.format("%1\$td.%1\$tm\n%1\$tH:%1\$tM", calendar)
         holder.datetime.text = String.format("%1\$ta", calendar)
         holder.temperature.text = "${weather.tempMax}\u00B0 / ${weather.tempMin}\u00B0"
         holder.weatherIcon.setImageResource(weatherGroupIcon(weather.weatherGroup))
@@ -67,6 +66,8 @@ class WeatherAdapter(
         selectedPosition = position
         notifyDataSetChanged()
     }
+
+    fun getItem(position: Int) = data[position]
 
     class ViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         val temperature: TextView = item.findViewById(R.id.temperature)
