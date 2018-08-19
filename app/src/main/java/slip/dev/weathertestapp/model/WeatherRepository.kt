@@ -17,9 +17,12 @@ class WeatherRepository {
     private val statusData = MutableLiveData<String>().apply { value = "OK" }
     fun getLoadingStatus(): LiveData<String> = statusData
 
-    fun loadForecast() {
+    fun loadForecast(geopoint: Geopoint) {
         statusData.value = "Loading"
-        weatherAPI.getForecast(47.83, 35.19).enqueue(object : Callback<ForecastResponse> {
+        weatherAPI.getForecast(
+                geopoint.latitude,
+                geopoint.longitude
+        ).enqueue(object : Callback<ForecastResponse> {
             override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
                 Log.e("LOADING", "LOADING FAILED", t)
                 statusData.value = "Failed to load forecast (${t.message})"

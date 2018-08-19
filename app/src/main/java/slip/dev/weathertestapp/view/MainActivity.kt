@@ -8,11 +8,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.item_weather_selected.*
 import slip.dev.weathertestapp.R
 import slip.dev.weathertestapp.view.adapter.DailyWeatherAdapter
 import slip.dev.weathertestapp.view.adapter.HourlyWeatherAdapter
 import slip.dev.weathertestapp.viewmodel.ForecastViewModel
+import slip.dev.weathertestapp.viewmodel.LocationViewModel
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -20,10 +22,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val viewModel = ViewModelProviders.of(this).get(ForecastViewModel::class.java)
-        initDailyForecast(viewModel)
-        initHourlyForecast(viewModel)
-        initCurrentWeather(viewModel)
+        setSupportActionBar(toolbar)
+        title = "UNKNOWN LOCATION"
+        val forecastViewModel = ViewModelProviders.of(this).get(ForecastViewModel::class.java)
+        initDailyForecast(forecastViewModel)
+        initHourlyForecast(forecastViewModel)
+        initCurrentWeather(forecastViewModel)
+        val locationViewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
+        locationViewModel.location.observe(this, Observer { geopoint ->
+            if (geopoint != null) {
+                title = geopoint.city
+                forecastViewModel.loadForecast(geopoint)
+            }
+        })
     }
 
     private fun initDailyForecast(viewModel: ForecastViewModel) {

@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import slip.dev.weathertestapp.model.Geopoint
 import slip.dev.weathertestapp.model.WeatherRecord
 import slip.dev.weathertestapp.model.WeatherRepository
 import java.util.*
@@ -17,7 +18,6 @@ class ForecastViewModel : ViewModel() {
     val currentWeather: MutableLiveData<WeatherRecord>
 
     init {
-        repository.loadForecast()
         dailyForecast = Transformations.map(weatherData) { forecast ->
             val weatherByDays = forecast.groupBy { record ->
                 val calendar = Calendar.getInstance()
@@ -73,7 +73,7 @@ class ForecastViewModel : ViewModel() {
     }
 
     fun getLoadingStatus() = repository.getLoadingStatus()
-    fun loadForecast() = repository.loadForecast()
+    fun loadForecast(geopoint: Geopoint) = repository.loadForecast(geopoint)
     fun updateHourlyForecast(dailyForecast: WeatherRecord) {
         hourlyForecast.value = hourlyForecast(dailyForecast.datetime)
         currentWeather.value = dailyForecast
