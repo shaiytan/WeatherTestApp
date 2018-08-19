@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimaryDark"
-            app:navigationIcon="@drawable/ic_place"
+            app:logo="@drawable/ic_place"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:titleTextColor="@color/colorBackground" />
 

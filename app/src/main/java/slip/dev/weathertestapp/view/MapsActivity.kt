@@ -6,7 +6,14 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.places.AutocompleteFilter
+import com.google.android.gms.location.places.Place
+import com.google.android.gms.location.places.ui.PlaceSelectionListener
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -24,6 +31,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private lateinit var viewModel: LocationViewModel
     private lateinit var selectedLocation: LiveData<Geopoint>
+    private lateinit var searchFragment: SupportPlaceAutocompleteFragment
     private var marker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +41,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+        searchFragment = supportFragmentManager
+                .findFragmentById(R.id.place_pick) as SupportPlaceAutocompleteFragment
+        searchFragment.setFilter(AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .build())
+        search_container.visibility = View.GONE
+        searchFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+            override fun onPlaceSelected(place: Place?) {
+                if (place != null) {
+                    val lat = place.latLng.latitude
+                    val lng = place.latLng.longitude
+                    viewModel.updateLocation(lat, lng)
+                }
+            }
+
+            override fun onError(status: Status) {
+            }
+        })
         viewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
         selectedLocation = viewModel.location
     }
@@ -44,12 +70,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val current = LatLng(point.latitude, point.longitude)
                 if (marker == null) {
                     marker = map.addMarker(MarkerOptions().title(point.city).position(current))
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 6.0F))
                 } else marker?.apply {
                     position = current
                     title = point.city
                 }
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 6.0F))
+                searchFragment.setText(point.city)
                 title = point.city
+                search_container.visibility = View.GONE
             }
         })
         map_btn.setOnClickListener(this::onSubmit)
@@ -68,6 +96,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun cancelSelection() {
         setResult(RESULT_CANCELED)
         finish()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return if (item?.itemId == R.id.search_item) {
+            if (search_container.visibility == View.VISIBLE)
+                search_container.visibility = View.GONE
+            else search_container.visibility = View.VISIBLE
+            true
+        } else super.onOptionsItemSelected(item)
     }
 
     private fun onSubmit(view: View) {
