@@ -2,33 +2,41 @@ package slip.dev.weathertestapp.view
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.item_weather_selected.*
 import slip.dev.weathertestapp.R
+import slip.dev.weathertestapp.model.Geopoint
 import slip.dev.weathertestapp.view.adapter.DailyWeatherAdapter
 import slip.dev.weathertestapp.view.adapter.HourlyWeatherAdapter
 import slip.dev.weathertestapp.viewmodel.ForecastViewModel
 import slip.dev.weathertestapp.viewmodel.LocationViewModel
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+private const val LOCATION_REQUEST = 100
 
+class MainActivity : AppCompatActivity() {
+    private lateinit var locationViewModel: LocationViewModel
+    private lateinit var forecastViewModel: ForecastViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         title = "UNKNOWN LOCATION"
-        val forecastViewModel = ViewModelProviders.of(this).get(ForecastViewModel::class.java)
-        initDailyForecast(forecastViewModel)
-        initHourlyForecast(forecastViewModel)
-        initCurrentWeather(forecastViewModel)
-        val locationViewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
+        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
+        forecastViewModel = ViewModelProviders.of(this).get(ForecastViewModel::class.java)
+        initDailyForecast()
+        initHourlyForecast()
+        initCurrentWeather()
+
         locationViewModel.location.observe(this, Observer { geopoint ->
             if (geopoint != null) {
                 title = geopoint.city
@@ -37,38 +45,38 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun initDailyForecast(viewModel: ForecastViewModel) {
+    private fun initDailyForecast() {
         daily_weather_list.layoutManager = LinearLayoutManager(this)
         val weatherAdapter = DailyWeatherAdapter(this, emptyList())
         weatherAdapter.onClickListener = View.OnClickListener {
             val i = daily_weather_list.indexOfChild(it)
             weatherAdapter.selectItem(i)
-            viewModel.updateHourlyForecast(weatherAdapter.getItem(i))
+            forecastViewModel.updateHourlyForecast(weatherAdapter.getItem(i))
         }
         daily_weather_list.adapter = weatherAdapter
-        viewModel.dailyForecast.observe(this, Observer { list ->
+        forecastViewModel.dailyForecast.observe(this, Observer { list ->
             if (list != null) {
                 weatherAdapter.updateWeather(list)
-                viewModel.updateHourlyForecast(weatherAdapter.getItem(0))
+                forecastViewModel.updateHourlyForecast(weatherAdapter.getItem(0))
             }
         })
-        viewModel.getLoadingStatus().observe(this, Observer { msg ->
+        forecastViewModel.getLoadingStatus().observe(this, Observer { msg ->
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         })
     }
 
-    private fun initHourlyForecast(viewModel: ForecastViewModel) {
+    private fun initHourlyForecast() {
         hourly_weather_list.layoutManager =
                 LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         val weatherAdapter = HourlyWeatherAdapter(this, emptyList())
         hourly_weather_list.adapter = weatherAdapter
-        viewModel.hourlyForecast.observe(this, Observer { list ->
+        forecastViewModel.hourlyForecast.observe(this, Observer { list ->
             weatherAdapter.updateWeather(list ?: emptyList())
         })
     }
 
-    private fun initCurrentWeather(viewModel: ForecastViewModel) {
-        viewModel.currentWeather.observe(this, Observer { weather ->
+    private fun initCurrentWeather() {
+        forecastViewModel.currentWeather.observe(this, Observer { weather ->
             if (weather != null) {
                 val calendar = Calendar.getInstance()
                 calendar.timeZone = TimeZone.getDefault()
@@ -83,6 +91,25 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.location_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val intent = Intent(this, MapsActivity::class.java)
+        startActivityForResult(intent, LOCATION_REQUEST)
+        return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode != RESULT_OK || data == null) return
+        val city = data.getStringExtra("city")
+        val lat = data.getDoubleExtra("lat", 0.0)
+        val lng = data.getDoubleExtra("lng", 0.0)
+        locationViewModel.location.value = Geopoint(lat, lng, city)
+        locationViewModel.saveLocation()
+    }
 }
 
 fun weatherGroupIcon(weatherGroup: String) = when (weatherGroup) {

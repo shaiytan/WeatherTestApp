@@ -15,7 +15,7 @@ interface GeocodingAPI {
     companion object {
         private const val DEFAULT_PARAMS =
                 "language=ru&result_type=locality|administrative_area_level_1&" +
-                        "key=AIzaSyDyqI-qCuVFLicdMj48DpNlxVTnOgAFg4w"
+                        "key=AIzaSyCgu0Yep6Yuu6gsLWW-xDZwOnMTz4CIpYU"
         private const val BASE_URL = "https://maps.googleapis.com/maps/api/"
         fun create(): GeocodingAPI {
             val gson = GsonBuilder()

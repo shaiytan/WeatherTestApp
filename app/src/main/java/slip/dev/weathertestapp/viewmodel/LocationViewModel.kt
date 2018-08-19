@@ -40,12 +40,14 @@ class LocationViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun saveLocation(loc: Geopoint) {
-        preferences.edit()
-                .putString(CITY_PREFERENCE, loc.city)
-                .putFloat(LATITUDE_PREFERENCE, loc.latitude.toFloat())
-                .putFloat(LONGITUDE_PREFERENCE, loc.longitude.toFloat())
-                .apply()
+    fun saveLocation() {
+        location.value?.let { loc ->
+            preferences.edit()
+                    .putString(CITY_PREFERENCE, loc.city)
+                    .putFloat(LATITUDE_PREFERENCE, loc.latitude.toFloat())
+                    .putFloat(LONGITUDE_PREFERENCE, loc.longitude.toFloat())
+                    .apply()
+        }
     }
 
     fun updateLocation(lat: Double, lng: Double) {

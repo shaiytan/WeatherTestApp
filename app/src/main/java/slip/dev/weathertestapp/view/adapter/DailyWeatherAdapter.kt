@@ -39,7 +39,7 @@ class DailyWeatherAdapter(
         holder.temperature.text = "${weather.tempMax}\u00B0 / ${weather.tempMin}\u00B0"
         holder.weatherIcon.setImageResource(weatherGroupIcon(weather.weatherGroup))
         val (textColor, backgroundColor) = if (position == selectedPosition) {
-            context.resources.getColor(R.color.colorPrimary) to context.resources.getColor(R.color.colorAccent)
+            context.resources.getColor(R.color.colorPrimary) to context.resources.getColor(R.color.colorAccentBackground)
         } else {
             context.resources.getColor(R.color.colorText) to context.resources.getColor(R.color.colorBackground)
         }
