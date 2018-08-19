@@ -17,6 +17,7 @@ class ForecastViewModel : ViewModel() {
     val currentWeather: MutableLiveData<WeatherRecord>
 
     init {
+        repository.loadForecast()
         dailyForecast = Transformations.map(weatherData) { forecast ->
             val weatherByDays = forecast.groupBy { record ->
                 val calendar = Calendar.getInstance()

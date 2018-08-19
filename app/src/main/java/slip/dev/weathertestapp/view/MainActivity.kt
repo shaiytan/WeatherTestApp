@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
                 viewModel.updateHourlyForecast(weatherAdapter.getItem(0))
             }
         })
-        viewModel.loadForecast()
         viewModel.getLoadingStatus().observe(this, Observer { msg ->
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         })
