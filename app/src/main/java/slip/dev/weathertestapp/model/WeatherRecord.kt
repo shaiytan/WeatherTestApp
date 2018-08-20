@@ -1,22 +1,27 @@
 package slip.dev.weathertestapp.model
 
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import java.lang.reflect.Type
 
+@Entity(tableName = "weather")
 data class WeatherRecord(
-        val weatherGroup: String,
-        val tempMin: Int,
-        val tempMax: Int,
+        @field:ColumnInfo(name = "weather_group") val weatherGroup: String,
+        @field:ColumnInfo(name = "temp_min") val tempMin: Int,
+        @field:ColumnInfo(name = "temp_max") val tempMax: Int,
         val humidity: Int,
-        val windSpeed: Int,
-        val windDegree: Int,
+        @field:ColumnInfo(name = "wind_speed") val windSpeed: Int,
+        @field:ColumnInfo(name = "wind_degree") val windDegree: Int,
         val latitude: Double,
         val longitude: Double,
         val datetime: Long,
-        var city: String? = null
+        var city: String? = null,
+        @field:PrimaryKey(autoGenerate = true) var id: Long? = null
 )
 
 class ForecastResponse(val forecast: List<WeatherRecord>) {

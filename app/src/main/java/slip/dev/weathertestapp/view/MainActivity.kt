@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         }
         daily_weather_list.adapter = weatherAdapter
         forecastViewModel.dailyForecast.observe(this, Observer { list ->
-            if (list != null) {
+            if (list != null && !list.isEmpty()) {
                 weatherAdapter.updateWeather(list)
                 forecastViewModel.updateHourlyForecast(weatherAdapter.getItem(0))
             }
