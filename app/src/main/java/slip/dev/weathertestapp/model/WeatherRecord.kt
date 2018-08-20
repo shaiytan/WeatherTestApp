@@ -24,6 +24,7 @@ data class WeatherRecord(
         @field:PrimaryKey(autoGenerate = true) var id: Long? = null
 )
 
+//gson expects json array if I use JsonDeserializer<List<*>>, but response is json object
 class ForecastResponse(val forecast: List<WeatherRecord>) {
     class Deserializer : JsonDeserializer<ForecastResponse> {
         override fun deserialize(json: JsonElement, typeOfT: Type?, context: JsonDeserializationContext?): ForecastResponse {
@@ -61,7 +62,7 @@ class ForecastResponse(val forecast: List<WeatherRecord>) {
                     windDegree,
                     latitude,
                     longitude,
-                    datetime * 1000
+                    datetime * 1000 //to milliseconds
             )
         }
     }

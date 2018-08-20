@@ -38,9 +38,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
         setSupportActionBar(toolbar)
+        viewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
+        selectedLocation = viewModel.location
+
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
         searchFragment = supportFragmentManager
                 .findFragmentById(R.id.place_pick) as SupportPlaceAutocompleteFragment
         searchFragment.setFilter(AutocompleteFilter.Builder()
@@ -59,8 +63,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun onError(status: Status) {
             }
         })
-        viewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
-        selectedLocation = viewModel.location
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

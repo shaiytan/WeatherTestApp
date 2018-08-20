@@ -9,6 +9,7 @@ import retrofit2.Response
 import slip.dev.weathertestapp.api.WeatherAPI
 import slip.dev.weathertestapp.model.db.WeatherDatabase
 
+//loads cache from database or from internet, if there is no cache
 class WeatherRepository(app: Application) {
     private val db = WeatherDatabase.create(app)
     private val dao = db.getDAO()

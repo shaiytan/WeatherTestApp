@@ -18,14 +18,16 @@ class ForecastViewModel(app: Application) : AndroidViewModel(app) {
     val hourlyForecast: MutableLiveData<List<WeatherRecord>>
     val currentWeather: MutableLiveData<WeatherRecord>
 
-    init {
+    init { //summerize weather items for each day
         dailyForecast = Transformations.map(weatherData) { forecast ->
-            val weatherByDays = forecast.groupBy { record ->
+            val weatherByDays: List<List<WeatherRecord>> = forecast.groupBy { record ->
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = record.datetime
                 calendar.get(Calendar.DAY_OF_YEAR) - 366 //don't brake order on years' edge
             }.toSortedMap().values.toList()
-            weatherByDays.map { oneDayForecast ->
+            //summerize each list to one common WeatherRecord
+            weatherByDays.map { oneDayForecast: List<WeatherRecord> ->
+                //take the day's most frequent weather group
                 val weatherGroup = oneDayForecast
                         .groupBy(WeatherRecord::weatherGroup)
                         .mapValues { it.value.size }
@@ -36,6 +38,7 @@ class ForecastViewModel(app: Application) : AndroidViewModel(app) {
                 val tempMax = oneDayForecast.maxBy(WeatherRecord::tempMax)?.tempMax ?: 0
                 val humidity = oneDayForecast.sumBy(WeatherRecord::humidity) / oneDayForecast.size
                 val windSpeed = oneDayForecast.sumBy(WeatherRecord::windSpeed) / oneDayForecast.size
+                //take the day's most frequent wind degree
                 val windDegree = oneDayForecast
                         .groupBy(WeatherRecord::windDegree)
                         .mapValues { it.value.size }
@@ -61,6 +64,7 @@ class ForecastViewModel(app: Application) : AndroidViewModel(app) {
         currentWeather = MutableLiveData()
     }
 
+    //filter forecast by selected date
     private fun hourlyForecast(date: Long): List<WeatherRecord> {
         val calendar = Calendar.getInstance()
         calendar.timeZone = TimeZone.getDefault()
