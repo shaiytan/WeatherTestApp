@@ -74,8 +74,8 @@ class ForecastViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun getLoadingStatus() = repository.getLoadingStatus()
-    fun loadForecast(geopoint: Geopoint) {
-        repository.loadForecast(geopoint)
+    fun loadForecast(geopoint: Geopoint, forced: Boolean = false) {
+        repository.loadForecast(geopoint, forced)
     }
 
     fun updateHourlyForecast(dailyForecast: WeatherRecord) {

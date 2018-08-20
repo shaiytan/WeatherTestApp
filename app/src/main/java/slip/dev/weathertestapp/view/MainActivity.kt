@@ -26,17 +26,25 @@ private const val LOCATION_REQUEST = 100
 class MainActivity : AppCompatActivity() {
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var forecastViewModel: ForecastViewModel
+    private var locationMenuItem: MenuItem? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-        title = "UNKNOWN LOCATION"
+        title = "UNAVAILABLE"
         locationViewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
         forecastViewModel = ViewModelProviders.of(this).get(ForecastViewModel::class.java)
         initDailyForecast()
         initHourlyForecast()
         initCurrentWeather()
-
+        swipe_refresh.setOnRefreshListener {
+            val point = locationViewModel.location.value
+            if (point != null) forecastViewModel.loadForecast(point, forced = true)
+            else {
+                locationViewModel.requestLocation()
+                swipe_refresh.isRefreshing = false
+            }
+        }
         locationViewModel.location.observe(this, Observer { geopoint ->
             if (geopoint != null) {
                 title = geopoint.city
@@ -61,6 +69,8 @@ class MainActivity : AppCompatActivity() {
             }
         })
         forecastViewModel.getLoadingStatus().observe(this, Observer { msg ->
+            swipe_refresh.isRefreshing = msg == "Loading"
+            locationMenuItem?.isEnabled = msg == "OK"
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         })
     }
@@ -91,8 +101,9 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.location_menu, menu)
+        locationMenuItem = menu.findItem(R.id.location_item)
         return true
     }
 

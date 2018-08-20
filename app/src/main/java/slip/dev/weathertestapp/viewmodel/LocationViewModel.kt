@@ -29,14 +29,17 @@ class LocationViewModel(app: Application) : AndroidViewModel(app) {
             val lng = preferences.getFloat(LONGITUDE_PREFERENCE, 0.0F).toDouble()
             val city = preferences.getString(CITY_PREFERENCE, "UNKNOWN LOCATION")
             location.value = Geopoint(lat, lng, city)
-        } else {
-            val manager = app.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            try {
-                manager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)?.let { loc ->
-                    updateLocation(loc.latitude, loc.longitude)
-                }
-            } catch (ignored: SecurityException) {
+        } else requestLocation()
+    }
+
+    fun requestLocation() {
+        val app = getApplication<Application>()
+        val manager = app.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        try {
+            manager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)?.let { loc ->
+                updateLocation(loc.latitude, loc.longitude)
             }
+        } catch (ignored: SecurityException) {
         }
     }
 

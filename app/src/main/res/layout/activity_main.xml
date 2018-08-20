@@ -18,6 +18,7 @@
             android:background="@color/colorPrimaryDark"
             app:logo="@drawable/ic_place"
             app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:titleTextColor="@color/colorBackground" />
 
     </android.support.design.widget.AppBarLayout>

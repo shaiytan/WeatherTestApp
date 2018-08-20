@@ -33,8 +33,8 @@ class WeatherRepository(app: Application) {
         }
     }
 
-    fun loadForecast(geopoint: Geopoint) {
-        if (checkCache(weatherData.value?.get(0), geopoint)) return
+    fun loadForecast(geopoint: Geopoint, forced: Boolean = false) {
+        if (!forced && checkCache(weatherData.value, geopoint)) return
         statusData.value = "Loading"
         weatherAPI.getForecast(
                 geopoint.latitude,
@@ -57,9 +57,10 @@ class WeatherRepository(app: Application) {
         })
     }
 
-    private fun checkCache(forecast: WeatherRecord?, geopoint: Geopoint) = when {
+    private fun checkCache(forecast: List<WeatherRecord>?, geopoint: Geopoint) = when {
         forecast == null -> false
-        forecast.datetime < System.currentTimeMillis() -> false
-        else -> forecast.city == geopoint.city
+        forecast.isEmpty() -> false
+        forecast[0].datetime < System.currentTimeMillis() -> false
+        else -> forecast[0].city == geopoint.city
     }
 }
